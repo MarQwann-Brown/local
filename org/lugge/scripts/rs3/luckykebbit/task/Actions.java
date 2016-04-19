@@ -32,7 +32,7 @@ public class Actions extends ClientAccessor {
                 next = ctx.objects.select().id(66473).poll();
                 break;
             case 3:
-                next = ctx.objects.id(new int[]{66474, 66473}).select().nearest().poll();
+                next = ctx.objects.select().id(new int[]{66474, 66473}).nearest().poll();
                 break;
         }
         nextObject = next;
