@@ -5,11 +5,9 @@ import lugge.scripts.rs3.luckykebbit.data.Tracks;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Filter;
 import org.powerbot.script.Random;
-import org.powerbot.script.rt6.ClientAccessor;
-import org.powerbot.script.rt6.ClientContext;
-import org.powerbot.script.rt6.GameObject;
-import org.powerbot.script.rt6.Item;
+import org.powerbot.script.rt6.*;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
@@ -129,37 +127,47 @@ public class Actions extends ClientAccessor {
 
     public void cleanInventory() {
         status = "Clean Inv";
-        for (Item item : ctx.backpack.select(new Filter<Item>() {
-            @Override
-            public boolean accept(Item item) {
-                return (item.id() == 526|| item.id() == 9986 || item.id() == 685 || item.id() == 36799);
+        if(ctx.hud.opened(Hud.Window.BACKPACK)) {
+            for (Item item : ctx.backpack.select(new Filter<Item>() {
+                @Override
+                public boolean accept(Item item) {
+                    return (item.id() == 526|| item.id() == 9986 || item.id() == 685 || item.id() == 36799);
+                }
+            })) {
+                final Item fItem = item;
+                if (item.id() == 36799) {
+                    item.interact("Destroy");
+                    Condition.wait(new Callable<Boolean>() {
+                        @Override
+                        public Boolean call() throws Exception {
+                            return ctx.widgets.component(1183, 16).visible();
+                        }
+                    }, 500, 5);
+                    ctx.widgets.component(1183, 16).click();
+                    Condition.wait(new Callable<Boolean>() {
+                        @Override
+                        public Boolean call() throws Exception {
+                            return !ctx.backpack.select().id(fItem.id()).poll().valid();
+                        }
+                    }, 500, 5);
+                } else {
+                    item.interact("Drop");
+                    Condition.wait(new Callable<Boolean>() {
+                        @Override
+                        public Boolean call() throws Exception {
+                            return !ctx.backpack.select().id(fItem.id()).poll().valid();
+                        }
+                    }, 500, 5);
+                }
             }
-        })) {
-            final Item fItem = item;
-            if (item.id() == 36799) {
-                item.interact("Destroy");
-                Condition.wait(new Callable<Boolean>() {
-                    @Override
-                    public Boolean call() throws Exception {
-                        return ctx.widgets.component(1183, 16).visible();
-                    }
-                }, 500, 5);
-                ctx.widgets.component(1183, 16).click();
-                Condition.wait(new Callable<Boolean>() {
-                    @Override
-                    public Boolean call() throws Exception {
-                        return !ctx.backpack.select().id(fItem.id()).poll().valid();
-                    }
-                }, 500, 5);
-            } else {
-                item.interact("Drop");
-                Condition.wait(new Callable<Boolean>() {
-                    @Override
-                    public Boolean call() throws Exception {
-                        return !ctx.backpack.select().id(fItem.id()).poll().valid();
-                    }
-                }, 500, 5);
-            }
+        }else {
+            ctx.hud.open(Hud.Window.BACKPACK);
+            Condition.wait(new Callable<Boolean>() {
+                @Override
+                public Boolean call() throws Exception {
+                    return ctx.hud.opened(Hud.Window.BACKPACK);
+                }
+            }, 500, 5);
         }
     }
 

@@ -7,5 +7,5 @@ public enum States {
     WALK_BANK,
     BANK,
     WALK_LOCATION,
-    NULL
+    IDLE,
 }

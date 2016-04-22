@@ -33,6 +33,6 @@ public class Conditions extends ClientAccessor {
                 return States.FOLLOW_TRACK;
             }
         }
-        return States.NULL;
+        return States.IDLE;
     }
 }
