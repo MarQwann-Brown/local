@@ -10,7 +10,7 @@ import org.powerbot.script.rt6.GameObject;
 
 import java.awt.*;
 
-@Script.Manifest(name = "LuckyKebbit", description = "hunts polar kebbits for profit", properties = "client=6; topic=1309379;")
+@Script.Manifest(name = "LuckyKebbit", description = "hunts polar kebbits for profit", properties = "authors=Lugge; client=6; topic=1309379;")
 
 public class LuckyKebbit extends PollingScript<ClientContext> implements PaintListener, MessageListener {
 
@@ -47,6 +47,8 @@ public class LuckyKebbit extends PollingScript<ClientContext> implements PaintLi
                 break;
             case WALK_LOCATION:
                 Actions.walkLocation();
+                break;
+            case IDLE:
                 break;
         }
     }
